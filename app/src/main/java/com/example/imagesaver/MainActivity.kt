@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             var photosSaved = 0 // Keep track of the number of photos saved so far
             for (response in responseList) {
                 if (response.albumId <= albumId && photosSaved <= numPhotos) {
-                    val imageUrl = response.url // Replace "imageUrl" with the name of the field in your response object that contains the image URL
+                    val imageUrl = response.url
                     lifecycleScope.launch {
                         val imageBitmap = withContext(Dispatchers.IO) {
                             URL(imageUrl).openStream().use { inputStream ->
