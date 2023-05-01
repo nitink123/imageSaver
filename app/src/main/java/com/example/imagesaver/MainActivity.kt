@@ -34,10 +34,12 @@ class MainActivity : AppCompatActivity() {
 
         dataViewModel.apiResponse.observe(this) { responseList ->
             var photosSaved = 0 // Keep track of the number of photos saved so far
-            for (response in responseList) {
-               // if albumId is same and photoSaved is less then (album * numPhotos)
-                if (response.albumId <= albumId && photosSaved < albumId * numPhotos) {
-                    val imageUrl = response.url
+            for (albumIdToSave in 1..albumId) {
+                val photosForAlbum = responseList.filter { it.albumId == albumIdToSave }
+                val numPhotosForAlbum = minOf(numPhotos, photosForAlbum.size) // Limit the number of photos to save to the smaller of numPhotos and the number of photos available for the album
+                for (i in 0 until numPhotosForAlbum) {
+                    val photoResponse = photosForAlbum[i]
+                    val imageUrl = photoResponse.url
                     lifecycleScope.launch {
                         val imageBitmap = withContext(Dispatchers.IO) {
                             URL(imageUrl).openStream().use { inputStream ->
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         val directory = getExternalFilesDir(null)
-                        val fileName = "image_${response.albumId}_${response.id}.jpg" // Generate a unique file name for each image
+                        val fileName = "image_${photoResponse.albumId}_${photoResponse.id}.jpg" // Generate a unique file name for each image
                         val file = File(directory, fileName)
                         val fileOutputStream = FileOutputStream(file)
                         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
@@ -55,6 +57,12 @@ class MainActivity : AppCompatActivity() {
                         }
                         photosSaved++
                     }
+                    if (photosSaved >= albumIdToSave * numPhotos) { // Check if we've saved the maximum number of photos for all albums up to this point
+                        break
+                    }
+                }
+                if (photosSaved >= albumIdToSave * numPhotos) { // Check if we've saved the maximum number of photos for this album
+                    break
                 }
             }
         }
