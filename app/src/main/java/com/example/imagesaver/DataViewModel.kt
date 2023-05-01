@@ -13,6 +13,7 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
     val apiResponse: MutableLiveData<List<ApiResponse>> = MutableLiveData()
 
     fun getData() {
+
         val result = RetrofitEndpoint.create().getData()
 
         result.enqueue(object : Callback<List<ApiResponse>> {

@@ -9,7 +9,7 @@ interface RetrofitEndpoint {
 
     // URL : "https://jsonplaceholder.typicode.com/photos"
     @GET("${BASE_URL}photos")
-    fun getData(): Call<List<ApiResponse>>
+   fun getData(): Call<List<ApiResponse>>
 
     companion object {
         private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
