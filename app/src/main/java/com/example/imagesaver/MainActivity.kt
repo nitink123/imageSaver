@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         dataViewModel.apiResponse.observe(this) { responseList ->
             var photosSaved = 0 // Keep track of the number of photos saved so far
             for (response in responseList) {
-                if (response.albumId <= albumId && photosSaved <= numPhotos) {
+               // if albumId is same and photoSaved is less then (album * numPhotos)
+                if (response.albumId <= albumId && photosSaved < albumId * numPhotos) {
                     val imageUrl = response.url
                     lifecycleScope.launch {
                         val imageBitmap = withContext(Dispatchers.IO) {
