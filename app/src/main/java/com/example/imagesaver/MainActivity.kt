@@ -24,30 +24,14 @@ class MainActivity : AppCompatActivity() {
         dataViewModel = ViewModelProvider(this)[DataViewModel::class.java]
 
         // Specify the albumId(s) and number of photos to save
-
-        // Get the album ID entered by the user
         val albumId = 3 // Replace with the album ID entered by the user
-
-         // Specify the number of photos to save
         val numPhotos = 2 // Replace with the desired number of photos to save per album
 
         dataViewModel.getData()
 
-
-
-
-
-
-
-
         dataViewModel.apiResponse.observe(this) { responseList ->
             saveImage(responseList,albumId,numPhotos)
         }
-
-
-
-
-
 
     }
 
